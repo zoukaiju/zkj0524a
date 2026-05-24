@@ -197,6 +197,180 @@
             .weather-grid { grid-template-columns: 1fr; }
             h1 { font-size: 1.8rem; }
         }
+
+        /* AI 客服按钮 */
+        .ai-service-btn {
+            position: fixed;
+            bottom: 50%;
+            right: 2rem;
+            transform: translateY(50%);
+            width: 140px;
+            padding: 1.5rem 1rem;
+            background: linear-gradient(135deg, #ff4757, #e84118);
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(255, 71, 87, 0.4);
+            cursor: pointer;
+            transition: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 999;
+        }
+        .ai-service-btn:hover {
+            transform: translateY(50%) scale(1.1);
+            box-shadow: 0 12px 40px rgba(255, 71, 87, 0.6);
+        }
+        .ai-icon {
+            font-size: 3rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .ai-text {
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            line-height: 1.3;
+        }
+        @media (max-width: 600px) {
+            .ai-service-btn {
+                right: 1rem;
+                width: 100px;
+                padding: 1rem 0.75rem;
+            }
+            .ai-icon { font-size: 2.5rem; }
+            .ai-text { font-size: 0.85rem; }
+        }
+
+        /* AI 对话框 */
+        .chat-panel {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 400px;
+            height: 550px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1000;
+            animation: chatSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .chat-panel.open { display: flex; }
+        @keyframes chatSlideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #ff4757, #e84118);
+            color: white;
+            padding: 1rem 1.25rem;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.9;
+            transition: 0.2s;
+            line-height: 1;
+        }
+        .chat-close:hover { opacity: 1; transform: scale(1.2); }
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            background: #f8f9ff;
+        }
+        .chat-msg {
+            display: flex;
+            max-width: 85%;
+        }
+        .chat-msg.bot { align-self: flex-start; }
+        .chat-msg.user { align-self: flex-end; }
+        .chat-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .chat-msg.bot .chat-bubble {
+            background: white;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+            border-bottom-left-radius: 4px;
+        }
+        .chat-msg.user .chat-bubble {
+            background: linear-gradient(135deg, #ff4757, #e84118);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-msg.bot.loading .chat-bubble::after {
+            content: '●●●';
+            animation: typingDots 1s infinite;
+            letter-spacing: 2px;
+        }
+        @keyframes typingDots {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        .chat-input-bar {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+        .chat-input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            font-weight: 500;
+            outline: none;
+            transition: 0.2s;
+        }
+        .chat-input:focus { border-color: #ff4757; }
+        .chat-send {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff4757, #e84118);
+            color: white;
+            font-weight: 700;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .chat-send:hover { transform: scale(1.05); }
+        @media (max-width: 600px) {
+            .chat-panel {
+                width: calc(100vw - 2rem);
+                height: calc(100vh - 6rem);
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -211,6 +385,29 @@
     <div id="error-container"></div>
     <div id="weather-container"></div>
     <div id="update-time"></div>
+
+    <!-- AI 客服按钮 -->
+    <div class="ai-service-btn" onclick="toggleChat()">
+        <div class="ai-icon">🤖</div>
+        <div class="ai-text">AI 智能客服</div>
+    </div>
+
+    <!-- AI 对话框 -->
+    <div class="chat-panel" id="chat-panel">
+        <div class="chat-header">
+            <span>🤖 AI 智能客服</span>
+            <button class="chat-close" onclick="toggleChat()">✕</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="chat-msg bot">
+                <div class="chat-bubble">你好！我是天气查询助手，有什么可以帮你的？😊</div>
+            </div>
+        </div>
+        <div class="chat-input-bar">
+            <input type="text" class="chat-input" id="chat-input" placeholder="输入你的问题..." onkeydown="if(event.key==='Enter')sendMsg()">
+            <button class="chat-send" onclick="sendMsg()">发送</button>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -333,6 +530,101 @@ async function queryWeather() {
 
 // 页面加载时自动查询
 queryWeather();
+
+// ===== AI 客服功能 =====
+const API_URL = 'https://vtok.ai/v1/chat/completions';
+const API_KEY = 'sk-WtuYv9jrDYMKqDin01fsEGfyPPzqVWvBOAtft1bQHXLcJFpC';
+const MODEL = 'deepseek-v3.2';
+
+const SYSTEM_PROMPT = `你是"四城天气查询"网站的AI客服助手。请用简短友好的中文回复用户问题。
+
+这个网站的功能：
+1. 查询北京、上海、三亚、哈尔滨四个城市的当天天气
+2. 显示温度、体感温度、天气状况、湿度、风速等信息
+3. 数据来源于 wttr.in 免费天气服务
+
+使用说明：
+- 点击"查询当天天气"按钮获取最新天气数据
+- 页面会自动显示四个城市的天气卡片
+- 数据每次查询时实时更新
+
+请简洁回答，每次不超过3句话。语气活泼友好。`;
+
+let chatHistory = [{ role: 'system', content: SYSTEM_PROMPT }];
+
+function toggleChat() {
+    const panel = document.getElementById('chat-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+        document.getElementById('chat-input').focus();
+    }
+}
+
+function appendMsg(role, text) {
+    const container = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = `chat-msg ${role}`;
+    const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    div.innerHTML = `<div class="chat-bubble">${escaped}</div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function appendLoading() {
+    const container = document.getElementById('chat-messages');
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot loading';
+    div.id = 'chat-loading';
+    div.innerHTML = '<div class="chat-bubble"></div>';
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+function removeLoading() {
+    const el = document.getElementById('chat-loading');
+    if (el) el.remove();
+}
+
+async function sendMsg() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    appendMsg('user', text);
+    chatHistory.push({ role: 'user', content: text });
+    appendLoading();
+
+    try {
+        const res = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${API_KEY}`
+            },
+            body: JSON.stringify({
+                model: MODEL,
+                messages: chatHistory,
+                max_tokens: 300,
+                temperature: 0.7
+            })
+        });
+
+        const data = await res.json();
+        removeLoading();
+
+        if (data.choices && data.choices[0]) {
+            const reply = data.choices[0].message.content;
+            chatHistory.push({ role: 'assistant', content: reply });
+            appendMsg('bot', reply);
+        } else {
+            appendMsg('bot', '抱歉，我暂时无法回复，请稍后再试。');
+        }
+    } catch (e) {
+        removeLoading();
+        appendMsg('bot', '网络连接失败，请检查网络后重试。');
+    }
+}
 </script>
 </body>
 </html>

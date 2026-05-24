@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>黄金白银价格查询</title>
+    <title>四城天气查询</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --gold: #d4a017;
-            --gold-light: #f5e6a3;
-            --gold-bg: #fffdf5;
-            --silver: #8a9bae;
-            --silver-light: #d4dce6;
-            --bg: #fafafa;
+            --blue: #4a90e2;
+            --blue-light: #e3f2fd;
+            --orange: #ff9800;
+            --green: #4caf50;
+            --purple: #9c27b0;
+            --bg: #f5f7fa;
             --surface: #ffffff;
             --text: #2d3748;
             --text-secondary: #718096;
@@ -22,25 +22,23 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Quicksand', 'Noto Sans SC', sans-serif;
-            background: var(--bg);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: var(--text);
             min-height: 100vh;
             padding: 2rem 1rem;
         }
-        .container { max-width: 700px; margin: 0 auto; }
+        .container { max-width: 900px; margin: 0 auto; }
         h1 {
             text-align: center;
-            font-size: 2rem;
+            font-size: 2.2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, var(--gold), #b8860b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         .subtitle {
             text-align: center;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.9);
             margin-bottom: 2rem;
             font-weight: 500;
         }
@@ -50,270 +48,291 @@
             padding: 1.5rem;
             box-shadow: var(--shadow);
             margin-bottom: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            align-items: flex-end;
-            flex-wrap: wrap;
-        }
-        .query-box label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        .query-box input[type="date"] {
-            padding: 0.7rem 1rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-family: inherit;
-            font-weight: 600;
-            outline: none;
-            transition: 0.3s;
-        }
-        .query-box input[type="date"]:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 3px rgba(212, 160, 23, 0.15);
+            text-align: center;
         }
         .btn {
-            padding: 0.7rem 1.5rem;
+            padding: 0.8rem 2rem;
             border: none;
-            border-radius: 10px;
-            font-size: 0.95rem;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 700;
             font-family: inherit;
             cursor: pointer;
             transition: 0.3s;
-        }
-        .btn-gold {
-            background: linear-gradient(135deg, var(--gold), #b8860b);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.3);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
-        .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212, 160, 23, 0.4); }
-        .btn-gold:active { transform: translateY(0); }
-        .btn-today { background: #edf2f7; color: var(--text); }
-        .btn-today:hover { background: #e2e8f0; }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5); }
+        .btn:active { transform: translateY(-1px); }
 
-        .price-cards {
+        .weather-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.25rem;
             margin-bottom: 1.5rem;
         }
-        .price-card {
+        .weather-card {
             background: var(--surface);
             border-radius: var(--radius);
-            padding: 1.5rem;
+            padding: 1.75rem 1.5rem;
             box-shadow: var(--shadow);
             text-align: center;
             transition: 0.3s;
-            border: 2px solid transparent;
+            border-top: 4px solid;
+            position: relative;
+            overflow: hidden;
         }
-        .price-card.gold { border-color: var(--gold-light); background: var(--gold-bg); }
-        .price-card.silver { border-color: var(--silver-light); background: #f8fafc; }
-        .price-card:hover { transform: translateY(-3px); }
-        .price-card-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-        .price-card-label { font-size: 0.85rem; font-weight: 600; color: var(--text-secondary); margin-bottom: 0.3rem; }
-        .price-card-value { font-size: 2rem; font-weight: 700; color: var(--text); }
-        .price-card-unit { font-size: 0.8rem; color: var(--text-secondary); font-weight: 500; }
-        .price-card-time { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; }
+        .weather-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255,255,255,0.5));
+            opacity: 0;
+            transition: 0.3s;
+        }
+        .weather-card:hover { transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.15); }
+        .weather-card:hover::before { opacity: 1; }
+        .weather-card.beijing { border-top-color: #e74c3c; }
+        .weather-card.shanghai { border-top-color: #3498db; }
+        .weather-card.sanya { border-top-color: #f39c12; }
+        .weather-card.harbin { border-top-color: #9b59b6; }
 
-        .source-links {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.25rem 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
+        .city-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
         }
-        .source-links h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.75rem; }
-        .source-links a {
-            display: inline-block;
-            margin: 0.25rem 0.5rem 0.25rem 0;
-            padding: 0.4rem 0.8rem;
-            background: #edf2f7;
-            border-radius: 8px;
-            text-decoration: none;
+        .weather-icon {
+            font-size: 3.5rem;
+            margin: 0.5rem 0;
+            position: relative;
+            z-index: 1;
+        }
+        .temperature {
+            font-size: 2.5rem;
+            font-weight: 700;
             color: var(--text);
-            font-size: 0.85rem;
-            font-weight: 600;
-            transition: 0.2s;
+            margin: 0.5rem 0;
+            position: relative;
+            z-index: 1;
         }
-        .source-links a:hover { background: var(--gold-light); color: #7c5e00; }
+        .weather-desc {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 1;
+        }
+        .weather-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.8rem;
+            position: relative;
+            z-index: 1;
+        }
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .detail-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+        .detail-value {
+            color: var(--text);
+            font-weight: 700;
+        }
 
-        .info-box {
+        .update-time {
             background: var(--surface);
             border-radius: var(--radius);
-            padding: 1rem 1.5rem;
+            padding: 1rem;
             box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
+            text-align: center;
             font-size: 0.85rem;
             color: var(--text-secondary);
-            line-height: 1.8;
+            font-weight: 500;
         }
-        .info-box strong { color: var(--text); }
-
-        .history-section {
-            background: var(--surface);
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+        @keyframes dots {
+            0% { content: ''; }
+            33% { content: '.'; }
+            66% { content: '..'; }
+            100% { content: '...'; }
+        }
+        .error-msg {
+            background: #fff5f5;
+            color: #c53030;
+            padding: 1.25rem;
             border-radius: var(--radius);
-            padding: 1.5rem;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
             box-shadow: var(--shadow);
         }
-        .history-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
-        th { text-align: left; padding: 0.6rem 0.5rem; border-bottom: 2px solid #e2e8f0; font-weight: 700; color: var(--text-secondary); font-size: 0.8rem; }
-        td { padding: 0.6rem 0.5rem; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
-        tr:hover td { background: #fafafa; }
-        .empty-msg { text-align: center; padding: 2rem; color: var(--text-secondary); }
-        .loading { text-align: center; padding: 2rem; color: var(--text-secondary); font-weight: 600; }
-        .error-msg { background: #fff5f5; color: #c53030; padding: 1rem; border-radius: 10px; text-align: center; font-weight: 600; margin-bottom: 1rem; }
-        @media (max-width: 500px) {
-            .price-cards { grid-template-columns: 1fr; }
-            .query-box { flex-direction: column; align-items: stretch; }
+
+        @media (max-width: 600px) {
+            .weather-grid { grid-template-columns: 1fr; }
+            h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>🥇 黄金白银价格查询</h1>
-    <p class="subtitle">实时查询金银价格（人民币/克）</p>
+    <h1>🌤️ 四城天气查询</h1>
+    <p class="subtitle">北京 · 上海 · 三亚 · 哈尔滨</p>
 
     <div class="query-box">
-        <div style="flex:1">
-            <label for="query-date">选择日期</label>
-            <input type="date" id="query-date">
-        </div>
-        <button class="btn btn-today" onclick="setToday()">今天</button>
-        <button class="btn btn-gold" onclick="queryPrice()">查询价格</button>
+        <button class="btn" onclick="queryWeather()">🔄 查询当天天气</button>
     </div>
 
     <div id="error-container"></div>
-    <div id="price-container"></div>
-
-    <div class="source-links">
-        <h3>📡 数据来源（点击可查看原始数据）</h3>
-        <a href="https://www.sge.com.cn/sjzx/mrhq" target="_blank">上海黄金交易所</a>
-        <a href="https://www.rongtongjinjia.com/" target="_blank">融通金价网</a>
-        <a href="https://quote.fx678.com/exchange/SGE" target="_blank">汇通财经·上海金</a>
-        <a href="https://www.icbc.com.cn/column/1438058341489590354.html" target="_blank">工行纸黄金</a>
-    </div>
-
-    <div class="info-box">
-        <strong>说明：</strong>点击"查询价格"获取当天实时国际金银价格，自动换算为人民币/克。
-        数据来源为国际市场报价（美元/盎司 × 汇率 ÷ 31.1035）。
-        每次查询自动保存记录，可按日期回查。
-    </div>
-
-    <div class="history-section">
-        <div class="history-title">📋 查询记录</div>
-        <div id="history-container"></div>
-    </div>
+    <div id="weather-container"></div>
+    <div id="update-time"></div>
 </div>
 
 <script>
-const HISTORY_KEY = 'gold_silver_history';
-const TROY_OZ_TO_GRAM = 31.1035;
+const cities = [
+    { name: '北京', nameEn: 'Beijing', class: 'beijing', emoji: '🏛️' },
+    { name: '上海', nameEn: 'Shanghai', class: 'shanghai', emoji: '🏙️' },
+    { name: '三亚', nameEn: 'Sanya', class: 'sanya', emoji: '🏖️' },
+    { name: '哈尔滨', nameEn: 'Harbin', class: 'harbin', emoji: '❄️' }
+];
 
-function getHistory() {
-    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
-}
-function saveToHistory(record) {
-    const history = getHistory();
-    const idx = history.findIndex(r => r.date === record.date);
-    if (idx >= 0) history[idx] = record;
-    else history.unshift(record);
-    if (history.length > 60) history.pop();
-    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-}
-function formatDate(d) { return d.toISOString().split('T')[0]; }
-function setToday() { document.getElementById('query-date').value = formatDate(new Date()); }
+const weatherIcons = {
+    '113': '☀️', '116': '⛅', '119': '☁️', '122': '☁️', '143': '🌫️',
+    '176': '🌦️', '179': '🌨️', '182': '🌨️', '185': '🌨️', '200': '⛈️',
+    '227': '🌨️', '230': '❄️', '248': '🌫️', '260': '🌫️', '263': '🌦️',
+    '266': '🌧️', '281': '🌧️', '284': '🌧️', '293': '🌦️', '296': '🌧️',
+    '299': '🌧️', '302': '🌧️', '305': '🌧️', '308': '🌧️', '311': '🌧️',
+    '314': '🌧️', '317': '🌧️', '320': '🌨️', '323': '🌨️', '326': '🌨️',
+    '329': '❄️', '332': '❄️', '335': '❄️', '338': '❄️', '350': '🌨️',
+    '353': '🌦️', '356': '🌧️', '359': '🌧️', '362': '🌨️', '365': '🌨️',
+    '368': '🌨️', '371': '❄️', '374': '🌨️', '377': '🌨️', '386': '⛈️',
+    '389': '⛈️', '392': '⛈️', '395': '❄️'
+};
+
+const weatherDescCN = {
+    'Sunny': '晴朗', 'Clear': '晴朗', 'Partly cloudy': '多云', 'Cloudy': '阴天',
+    'Overcast': '阴天', 'Mist': '薄雾', 'Fog': '雾', 'Patchy rain possible': '可能有雨',
+    'Light rain': '小雨', 'Moderate rain': '中雨', 'Heavy rain': '大雨',
+    'Patchy snow possible': '可能有雪', 'Light snow': '小雪', 'Moderate snow': '中雪',
+    'Heavy snow': '大雪', 'Thundery outbreaks possible': '可能有雷暴'
+};
+
 function showError(msg) {
     document.getElementById('error-container').innerHTML = msg ? `<div class="error-msg">${msg}</div>` : '';
 }
-function showPrices(gold, silver, date, time, source) {
-    document.getElementById('price-container').innerHTML = `
-        <div class="price-cards">
-            <div class="price-card gold">
-                <div class="price-card-icon">🥇</div>
-                <div class="price-card-label">黄金价格</div>
-                <div class="price-card-value">${gold.toFixed(2)}</div>
-                <div class="price-card-unit">元/克</div>
-                <div class="price-card-time">${date} ${time || ''}</div>
-            </div>
-            <div class="price-card silver">
-                <div class="price-card-icon">🥈</div>
-                <div class="price-card-label">白银价格</div>
-                <div class="price-card-value">${silver.toFixed(2)}</div>
-                <div class="price-card-unit">元/克</div>
-                <div class="price-card-time">${date} ${time || ''}</div>
-            </div>
-        </div>
-        ${source ? `<div style="text-align:center;font-size:0.8rem;color:var(--text-secondary);margin-bottom:1rem">数据来源：${source}</div>` : ''}`;
-}
+
 function showLoading() {
-    document.getElementById('price-container').innerHTML = '<div class="loading">正在获取最新价格...</div>';
+    document.getElementById('weather-container').innerHTML = '<div class="loading">正在获取天气数据</div>';
+    document.getElementById('update-time').innerHTML = '';
 }
 
-async function fetchLivePrice() {
-    const [goldRes, silverRes, rateRes] = await Promise.all([
-        fetch('https://api.gold-api.com/price/XAU'),
-        fetch('https://api.gold-api.com/price/XAG'),
-        fetch('https://api.frankfurter.app/latest?from=USD&to=CNY')
-    ]);
-    const goldData = await goldRes.json();
-    const silverData = await silverRes.json();
-    const rateData = await rateRes.json();
-    const usdToCny = rateData.rates.CNY;
-    return {
-        gold: (goldData.price * usdToCny) / TROY_OZ_TO_GRAM,
-        silver: (silverData.price * usdToCny) / TROY_OZ_TO_GRAM,
-        rate: usdToCny,
-        goldUsd: goldData.price,
-        silverUsd: silverData.price
-    };
+async function fetchCityWeather(cityEn) {
+    const res = await fetch(`https://wttr.in/${cityEn}?format=j1`);
+    return await res.json();
 }
 
-async function queryPrice() {
-    const dateInput = document.getElementById('query-date').value;
-    if (!dateInput) { showError('请选择日期'); return; }
+function getWeatherIcon(code) {
+    return weatherIcons[code] || '🌤️';
+}
+
+function getWeatherDescCN(desc) {
+    return weatherDescCN[desc] || desc;
+}
+
+function renderWeather(weatherData) {
+    const html = cities.map((city, idx) => {
+        const data = weatherData[idx];
+        if (!data || !data.current_condition || !data.current_condition[0]) {
+            return `<div class="weather-card ${city.class}">
+                <div class="city-name">${city.emoji} ${city.name}</div>
+                <div style="padding:2rem;color:var(--text-secondary)">数据获取失败</div>
+            </div>`;
+        }
+
+        const current = data.current_condition[0];
+        const temp = current.temp_C;
+        const feelsLike = current.FeelsLikeC;
+        const weatherCode = current.weatherCode;
+        const weatherDesc = current.weatherDesc[0].value;
+        const humidity = current.humidity;
+        const windSpeed = current.windspeedKmph;
+
+        return `
+            <div class="weather-card ${city.class}">
+                <div class="city-name">${city.emoji} ${city.name}</div>
+                <div class="weather-icon">${getWeatherIcon(weatherCode)}</div>
+                <div class="temperature">${temp}°C</div>
+                <div class="weather-desc">${getWeatherDescCN(weatherDesc)}</div>
+                <div class="weather-details">
+                    <div class="detail-item">
+                        <div class="detail-label">体感</div>
+                        <div class="detail-value">${feelsLike}°C</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">湿度</div>
+                        <div class="detail-value">${humidity}%</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">风速</div>
+                        <div class="detail-value">${windSpeed}km/h</div>
+                    </div>
+                </div>
+            </div>`;
+    }).join('');
+
+    document.getElementById('weather-container').innerHTML = `<div class="weather-grid">${html}</div>`;
+
+    const now = new Date();
+    const timeStr = now.toLocaleString('zh-CN', {
+        year: 'numeric', month: '2-digit', day: '2-digit',
+        hour: '2-digit', minute: '2-digit'
+    });
+    document.getElementById('update-time').innerHTML =
+        `<div class="update-time">📅 更新时间：${timeStr} | 数据来源：wttr.in</div>`;
+}
+
+async function queryWeather() {
     showError('');
-    const today = formatDate(new Date());
+    showLoading();
 
-    if (dateInput === today) {
-        showLoading();
-        try {
-            const data = await fetchLivePrice();
-            const time = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
-            showPrices(data.gold, data.silver, dateInput, time, '国际市场实时报价（换算）');
-            saveToHistory({ date: dateInput, gold: data.gold, silver: data.silver, rate: data.rate, time });
-            renderHistory();
-        } catch (e) {
-            showError('获取失败，请检查网络后重试');
-            document.getElementById('price-container').innerHTML = '';
-        }
-    } else {
-        const record = getHistory().find(r => r.date === dateInput);
-        if (record) {
-            showPrices(record.gold, record.silver, record.date, record.time || '', '本地历史记录');
-        } else {
-            showError(`没有 ${dateInput} 的记录。请先查询当天价格保存，或访问上方数据来源网站查看历史。`);
-            document.getElementById('price-container').innerHTML = '';
-        }
+    try {
+        const promises = cities.map(city => fetchCityWeather(city.nameEn));
+        const results = await Promise.all(promises);
+        renderWeather(results);
+    } catch (e) {
+        showError('获取天气数据失败，请检查网络连接后重试');
+        document.getElementById('weather-container').innerHTML = '';
+        document.getElementById('update-time').innerHTML = '';
     }
 }
 
-function renderHistory() {
-    const history = getHistory();
-    const container = document.getElementById('history-container');
-    if (history.length === 0) { container.innerHTML = '<div class="empty-msg">暂无记录，点击"查询价格"开始</div>'; return; }
-    container.innerHTML = `<table><thead><tr><th>日期</th><th>黄金(元/克)</th><th>白银(元/克)</th><th>汇率</th></tr></thead><tbody>
-        ${history.map(r => `<tr><td>${r.date}</td><td style="color:#b8860b">${r.gold.toFixed(2)}</td><td style="color:#5a6f80">${r.silver.toFixed(2)}</td><td>${r.rate ? r.rate.toFixed(4) : '-'}</td></tr>`).join('')}
-    </tbody></table>`;
-}
-
-setToday();
-renderHistory();
+// 页面加载时自动查询
+queryWeather();
 </script>
 </body>
 </html>
